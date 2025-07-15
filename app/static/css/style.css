@@ -24,7 +24,7 @@ form {
     text-align: left;
     max-width: 400px;
     margin: 0 auto;
-    width: 100%;
+    width: 90%;
 }
 
 
@@ -237,4 +237,36 @@ label {
     margin-bottom: 5px;
     color: #fff;
     font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    form {
+        padding: 20px;
+        width: 100%;
+    }
+
+    input, select, button {
+        font-size: 16px;
+    }
+
+    .form-group {
+        max-width: 100%;
+    }
+
+    .burger-menu {
+        width: 25px;
+        height: 20px;
+    }
+
+    .burger-menu span {
+        height: 3px;
+    }
+
+    .nav-drawer {
+        width: 200px;
+    }
 }

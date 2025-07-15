@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>EnduroFit</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <nav>
-        <!-- Your nav bar here -->
-    </nav>
-
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
+<nav>
+    <a href="/logout" class="nav-link">🔓 Logout</a>
+</nav>
+{% block content %}{% endblock %}
 </body>
 </html>

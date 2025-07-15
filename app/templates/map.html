@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find Nearby Gyms - EnduroFit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        #reset-btn {
+            margin-top: 15px;
+        }
+
+        #gym-info {
+            margin-top: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a href="/home" class="nav-link">🏠 Home</a>
+</nav>
+<h2>Nearby Gyms</h2>
+<p>Explore the map or click a gym marker to view details.</p>
+
+<div id="map"></div>
+<button id="reset-btn" onclick="resetToUserLocation()">Back to My Location</button>
+<div id="gym-info"></div>
+
+<script>
+    let map;
+    let service;
+    let markers = [];
+    let currentInfoWindow = null;
+    let userLocation = null;
+    let debounceTimer;
+    let hasShownNearest = false;
+
+    const gymInfoDiv = document.getElementById("gym-info");
+
+    function clearMarkers() {
+        for (let marker of markers) {
+            marker.setMap(null);
+        }
+        markers = [];
+    }
+
+    function showGymDetails(place) {
+        const content = `
+        <strong>${place.name}</strong><br>
+        ${place.vicinity || ''}<br>
+        ${place.rating ? `Rating: ⭐ ${place.rating}` : ''}
+      `;
+        gymInfoDiv.innerHTML = content;
+        gymInfoDiv.style.display = 'block';
+    }
+
+    function getDistance(lat1, lng1, lat2, lng2) {
+        const toRad = deg => deg * (Math.PI / 180);
+        const R = 6371;
+        const dLat = toRad(lat2 - lat1);
+        const dLng = toRad(lng2 - lng1);
+
+        const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLng / 2) ** 2;
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    function loadGymsAtCenter(location) {
+        const request = {
+            location: location,
+            radius: 20000,
+            type: 'gym',
+            keyword: 'gym'
+        };
+
+        service.nearbySearch(request, (results, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                clearMarkers();
+
+                let nearest = null;
+                let nearestDist = Infinity;
+
+                for (let place of results) {
+                    if (!place.geometry?.location) continue;
+
+                    const marker = new google.maps.Marker({
+                        map,
+                        position: place.geometry.location,
+                        title: place.name
+
+                    });
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `<strong>${place.name}</strong><br>${place.vicinity || ''}`
+                    });
+
+                    marker.addListener('click', () => {
+                        if (currentInfoWindow) currentInfoWindow.close();
+                        infoWindow.open(map, marker);
+                        currentInfoWindow = infoWindow;
+                        showGymDetails(place);
+                    });
+
+                    markers.push(marker);
+
+                    // Check distance only if we haven't already shown nearest
+                    if (userLocation && !hasShownNearest) {
+                        const dist = getDistance(
+                            userLocation.lat,
+                            userLocation.lng,
+                            place.geometry.location.lat(),
+                            place.geometry.location.lng()
+                        );
+
+                        if (dist < nearestDist) {
+                            nearestDist = dist;
+                            nearest = place;
+                        }
+                    }
+                }
+
+                if (userLocation && nearest && !hasShownNearest) {
+                    showGymDetails(nearest);
+                    hasShownNearest = true;
+                }
+            } else {
+                console.warn("No gyms found or Places request failed:", status);
+            }
+        });
+    }
+
+    function initMap(centerLocation) {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: centerLocation,
+            zoom: 13
+        });
+
+        service = new google.maps.places.PlacesService(map);
+        loadGymsAtCenter(centerLocation);
+
+        map.addListener('idle', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                loadGymsAtCenter(map.getCenter());
+            }, 500);
+        });
+    }
+
+    function initializeMap() {
+        const fallback = {lat: 55.9533, lng: -3.1883};
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                pos => {
+                    userLocation = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude
+                    };
+                    initMap(userLocation);
+                },
+                () => {
+                    userLocation = fallback;
+                    initMap(fallback);
+                }
+            );
+        } else {
+            userLocation = fallback;
+            initMap(fallback);
+        }
+    }
+
+    function resetToUserLocation() {
+        if (userLocation) {
+            hasShownNearest = false;
+            map.setCenter(userLocation);
+            loadGymsAtCenter(userLocation);
+        }
+    }
+</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&callback=initializeMap">
+</script>
+</body>
+</html>

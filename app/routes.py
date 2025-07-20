@@ -36,6 +36,8 @@ def register():
             "password": hashed_pw
         })
 
+        return redirect(url_for('main.login'))
+
     return render_template('register.html')
 
 @main.route('/login', methods=['GET', 'POST'])

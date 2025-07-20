@@ -14,7 +14,7 @@ body {
 }
 
 form {
-    background-color: #111;
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -35,14 +35,12 @@ select {
     border-radius: 5px;
     border: 1px solid #ccc;
     width: 100%;
-    background-color: #2c2c2c;
-    color: white;
+    background-color: #ffffff;
     box-sizing: border-box;
 }
 
 button {
     background-color: #3498db;
-    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -98,7 +96,7 @@ nav {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 90vh; /* Center vertically */
+    height: 90vh;
     text-align: center;
 }
 
@@ -154,7 +152,7 @@ nav {
 .burger-menu span {
     display: block;
     height: 4px;
-    background-color: #333;
+    background-color: #007BFF;
     border-radius: 2px;
 }
 
@@ -235,7 +233,6 @@ button[type="submit"]:hover {
 
 label {
     margin-bottom: 5px;
-    color: #fff;
     font-weight: 500;
 }
 

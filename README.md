@@ -4,22 +4,6 @@
 
 ---
 
-## 🚀 Features
-
-- **Fitness Calculator**  
-  Calculates metrics like BMI based on user input.
-
-- **Interactive Map**  
-  Displays local gyms and health facilities using the Google Maps API with custom icons and location markers.
-
-- **User-Friendly Navigation**  
-  Simple interface with a clean layout for ease of use.
-
-- **Deployed on Heroku**  
-  Live deployment using Heroku for real-world hosting experience.
-
----
-
 ## ⚙️ Tech Stack
 
 - **Backend:** Flask (Python)

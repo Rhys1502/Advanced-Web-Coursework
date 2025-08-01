@@ -1,10 +1,10 @@
 # EnduroFit
 
-**EnduroFit** is a fitness-focused website designed to help users track their health and find local gyms or workout locations. It was developed as part of a university web technologies module using Python (Flask), HTML/CSS, JavaScript, and MongoDB.
+EnduroFit is a fitness-focused website developed as part the Advanced Web Technologies module using Python (Flask), HTML/CSS, JavaScript, and MongoDB.
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 
 - **Backend:** Flask (Python)
 - **Frontend:** HTML, CSS, JavaScript

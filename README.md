@@ -12,3 +12,8 @@
 - **API:** Google Maps JavaScript API
 - **Hosting:** Heroku with Gunicorn
 - **Version Control:** Git
+
+---
+
+- Created By Rhys Young
+- 2025
